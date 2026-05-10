@@ -35,10 +35,10 @@ on:
       - '.github/workflows/frontend-deploy.yml'
 
 env:
-  AWS_REGION: MY_AWS_REGION                            # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: MY_FRONTEND_ECR_REPOSITORY           # set this to your Amazon ECR repository name for frontend
-  ECS_SERVICE: MY_FRONTEND_ECS_SERVICE                 # set this to your Amazon ECS service name
-  ECS_CLUSTER: MY_FRONTEND_ECS_CLUSTER                 # set this to your Amazon ECS cluster name
+  AWS_REGION: ${{ vars.AWS_REGION}}                            # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}           # set this to your Amazon ECR repository name for frontend
+  ECS_SERVICE: ${{ vars.ECS_SERVICE }}                 # set this to your Amazon ECS service name
+  ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}                 # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: .aws/frontend-task-definition.json # set this to the path to your Amazon ECS task definition
                                                         # file for frontend
   CONTAINER_NAME: MY_FRONTEND_CONTAINER_NAME           # set this to the name of the container in the
