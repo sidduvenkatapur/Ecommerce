@@ -1,10 +1,9 @@
 # Stage 1: The name  'build' must be defined here after 'AS'
-FROM node:18-alpine
+FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-
 RUN npm run build
 
 # Stage 2:
