@@ -23,7 +23,7 @@ const ShopContextProvider = (props)=>{
     useEffect(()=>{
         getAllProducts();  
         if(sessionStorage.getItem("auth-token")){
-            fetch("http://localhost:4000/getcart",{
+            fetch(`${process.env.REACT_APP_API_URL}/getcart`,{
                 method:"POST",
                 headers:{
                     Accept:"application/form-data",
@@ -37,7 +37,7 @@ const ShopContextProvider = (props)=>{
        },[])
 
     const getAllProducts = async()=>{
-        const data = await fetch("http://localhost:4000/allproducts");
+        const data = await fetch(`${process.env.REACT_APP_API_URL}/allproducts`);
         const jsonData = await data.json();
         setProducts(jsonData);
         // console.log(jsonData);
@@ -46,7 +46,7 @@ const ShopContextProvider = (props)=>{
     const addToCart = async (itemId)=>{
       SetCartItems((prev)=>({...prev, [itemId]:prev[itemId]+1}))
       if(sessionStorage.getItem("auth-token")){
-        const data = await fetch("http://localhost:4000/addtocart",{
+        const data = await fetch(`${process.env.REACT_APP_API_URL}/addtocart`,{
             method:"POST",
             headers:{
                 Accept:"application/form-data",
@@ -63,7 +63,7 @@ const ShopContextProvider = (props)=>{
     const removeCartItem = async (itemId)=>{
         SetCartItems((prev)=>({...prev, [itemId]:prev[itemId]-1}))
         if(sessionStorage.getItem("auth-token")){
-            const data =  await fetch("http://localhost:4000/removefromcart",{
+            const data =  await fetch(`${process.env.REACT_APP_API_URL}/removefromcart`,{
                 method:"POST",
                 headers:{
                     Accept:"application/form-data",
