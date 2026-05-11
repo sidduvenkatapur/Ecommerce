@@ -17,7 +17,6 @@ const Footer = () => {
       <li>Office</li>
       <li>About</li>
       <li>Contact</li>
-      <li>Call Us</li>
     </ul> 
     <ul className=' flex gap-10 flex-1 list-none justify-center items-center text-xl px-8 py-8'>
       <li className='border border-gray-200 p-2 bg-gray-100'><img alt="insta" src={Icon1}/></li>
