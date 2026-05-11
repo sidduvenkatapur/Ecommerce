@@ -31,7 +31,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'frontend/**'
+      - 'my-app/**'
       - '.github/workflows/frontend-deploy.yml'
 
 env:
@@ -39,7 +39,7 @@ env:
   ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}           # set this to your Amazon ECR repository name for frontend
   ECS_SERVICE: ${{ vars.ECS_SERVICE }}                 # set this to your Amazon ECS service name
   ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: my-app/frontend-task-definition.json # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: my-app/task-definition.json # set this to the path to your Amazon ECS task definition
                                                         # file for frontend
   CONTAINER_NAME: frontend-container           # set this to the name of the container in the
                                                         # containerDefinitions section of your task definition
