@@ -72,6 +72,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REACT_APP_API_URL: http://frontend-alb-1481579407.us-east-1.elb.amazonaws.com:8080
         IMAGE_TAG: ${{ github.sha }}
       run: |
         # Build a docker container and
