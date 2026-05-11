@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN npm install --production
 
 # 4. Copy the rest of your backend source code
-COPY ..
+COPY . .
 
 # 5. The port your app listens on
 EXPOSE 8080
