@@ -11,7 +11,7 @@ const NewCollections = () => {
   },[])
 
   const fetchNewCollections = async ()=>{
-     const data = await fetch(${process.env.REACT_APP_API_URL}/newcollections`);
+     const data = await fetch(`${process.env.REACT_APP_API_URL}/newcollections`);
      const jsonData = await data.json();
      setNewcollections(jsonData);
   }
