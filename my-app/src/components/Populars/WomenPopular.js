@@ -11,7 +11,7 @@ const WomenPopular = () => {
   },[])
 
   const getPopular = async()=>{
-    const data = await fetch("http://localhost:4000/popularinwomen");
+    const data = await fetch(${process.env.REACT_APP_API_URL}/popularinwomen`);
     const jsonData = await data.json();
     setPopular(jsonData);
   }
