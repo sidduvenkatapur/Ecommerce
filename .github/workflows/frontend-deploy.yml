@@ -40,7 +40,7 @@ env:
   ECR_REPOSITORY: ecommerce-frontend
   ECS_SERVICE: ecommerce-frontend-service
   ECS_CLUSTER: tough-horse-kwfv18
-  ECS_TASK_DEFINITION: task-definition-frontend.json
+  ECS_TASK_DEFINITION: my-app/task-definition.json
   CONTAINER_NAME: frontend-container
 
 permissions:
