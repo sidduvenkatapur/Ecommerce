@@ -40,7 +40,7 @@ env:
   ECR_REPOSITORY: ecommerce-backend
   ECS_SERVICE: ecommerce-backend-service
   ECS_CLUSTER: tough-horse-kwfv18
-  ECS_TASK_DEFINITION: task-definition-backend.json
+  ECS_TASK_DEFINITION: Backend/task-definition-backend.json
   CONTAINER_NAME: backend-container
 
 permissions:
