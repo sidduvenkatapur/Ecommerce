@@ -36,7 +36,7 @@ app.get("/",(req,res)=>{
 
 app.listen(port,(error)=>{
     if(!error){
-        console.log("Server is running on port 4000");
+        console.log("Server is running on port 8080");
        }
 
        else{
@@ -60,7 +60,7 @@ app.use('/images',express.static('upload/images'))
 app.post('/upload',upload.single('product'),(req,res)=>{
  res.json({
     success:1,
-    image_url:`http://frontend-alb-1481579407.us-east-1.elb.amazonaws.com:8080/images/${req.file.filename}`
+    image_url:`http://app-load-balancer-259321352.us-east-1.elb.amazonaws.com:8080/images/${req.file.filename}`
  })
 })
 
