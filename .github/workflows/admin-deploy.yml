@@ -41,7 +41,7 @@ env:
   ECS_SERVICE: ecommerce-admin-service
   ECS_CLUSTER: tough-horse-kwfv18
   ECS_TASK_DEFINITION: Admin/task-definition.json
-  CONTAINER_NAME: admin-container
+  CONTAINER_NAME: ecommerce-admin
 
 permissions:
   contents: read
