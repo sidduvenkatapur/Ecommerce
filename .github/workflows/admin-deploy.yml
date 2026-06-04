@@ -1,11 +1,11 @@
 # This workflow will build and push a new container image to Amazon ECR,
-# and then will deploy a new task definition to Amazon ECS for the Admin service,
+# and then will deploy a new task definition to Amazon ECS for the Frontend service,
 # when there is a push to the "main" branch.
 #
 # To use this workflow, you will need to complete the following set-up steps:
 #
 # 1. Create an ECR repository to store your images.
-#    For example: `aws ecr create-repository --repository-name my-admin-ecr-repo --region us-east-2`.
+#    For example: `aws ecr create-repository --repository-name my-frontend-ecr-repo --region us-east-2`.
 #    Replace the value of the `ECR_REPOSITORY` environment variable in the workflow below with your repository's name.
 #    Replace the value of the `AWS_REGION` environment variable in the workflow below with your repository's region.
 #
@@ -25,74 +25,76 @@
 #    See the documentation for each action used below for the recommended IAM policies for this IAM user,
 #    and best practices on handling the access key credentials.
 
-name: Deploy Admin to Amazon ECS
+name: Deploy Frontend to Amazon ECS
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - "main"
     paths:
-      - 'admin/**'
-      - '.github/workflows/admin-deploy.yml'
+      - "Admin/**"
+      - ".github/workflows/admin-deploy.yml"
 
 env:
-  AWS_REGION: MY_AWS_REGION                          # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: MY_ADMIN_ECR_REPOSITORY            # set this to your Amazon ECR repository name for admin
-  ECS_SERVICE: MY_ADMIN_ECS_SERVICE                  # set this to your Amazon ECS service name
-  ECS_CLUSTER: MY_ADMIN_ECS_CLUSTER                  # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: .aws/admin-task-definition.json # set this to the path to your Amazon ECS task definition
-                                                      # file for admin
-  CONTAINER_NAME: MY_ADMIN_CONTAINER_NAME            # set this to the name of the container in the
-                                                      # containerDefinitions section of your task definition
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: ecommerce-admin
+  ECS_SERVICE: ecommerce-admin-service
+  ECS_CLUSTER: tough-horse-kwfv18
+  ECS_TASK_DEFINITION: Admin/task-definition.json
+  CONTAINER_NAME: admin-container
 
 permissions:
   contents: read
 
 jobs:
   deploy:
-    name: Deploy Admin
+    name: Deploy Frontend
     runs-on: ubuntu-latest
     environment: production
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ vars.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./admin
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          # ⚠️ REPLACE THE URL BELOW WITH YOUR NEW ALB DNS NAME FROM THE CLOUDFORMATION OUTPUTS
+          REACT_APP_API_URL: http://app-load-balancer-236200593.us-east-1.elb.amazonaws.com:8080
+          
+        run: |
+          docker build \
+            --build-arg REACT_APP_API_URL=${{ env.REACT_APP_API_URL }} \
+            -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG \
+            ./my-app
+          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
-      id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: ${{ env.ECS_TASK_DEFINITION }}
-        container-name: ${{ env.CONTAINER_NAME }}
-        image: ${{ steps.build-image.outputs.image }}
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
 
-    - name: Deploy Amazon ECS task definition
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: ${{ env.ECS_SERVICE }}
-        cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
