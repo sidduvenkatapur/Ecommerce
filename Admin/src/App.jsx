@@ -8,7 +8,7 @@ import Sidebar from './components/Sidebar/Sidebar'
 function App() {
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/admin">
     <Header />
     <div className='flex gap-10'>
     <Sidebar />
