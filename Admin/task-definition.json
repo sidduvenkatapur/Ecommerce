@@ -25,15 +25,7 @@
           "name": "REACT_APP_API_URL",
           "value": "http://app-load-balancer-236200593.us-east-1.elb.amazonaws.com:8080"
         }
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/ecommerce-admin-task-definition",
-          "awslogs-region": "us-east-1",
-          "awslogs-stream-prefix": "ecs"
-        }
-      }
+      ]
     }
   ]
 }
