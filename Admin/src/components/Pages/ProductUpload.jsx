@@ -24,7 +24,7 @@ const uploadProduct = async()=>{
     let product = Product;
     let formdata = new FormData();
     formdata.append('product',image);
-    await fetch("http://localhost:400/upload",{
+    await fetch(`${import.meta.env.VITE_API_URL}/upload`,{
         method:'POST',
         headers:{
             Accept:"application/json",
@@ -35,7 +35,7 @@ const uploadProduct = async()=>{
         product.image = responsedata.image_url
         console.log(product);
 
-        await fetch("http://localhost:400/addproduct",{
+        await fetch(`${import.meta.env.VITE_API_URL}/addproduct`,{
             method:"POST",
             headers:{
                 Accept:"application/json",
