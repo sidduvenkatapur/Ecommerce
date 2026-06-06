@@ -12,8 +12,9 @@ RUN npm run build
 FROM nginx:stable-alpine
 # Create the subfolder structre Nginx expects
 RUN rm -rf /usr/share/nginx/html/*
+RUN mkdir -p /usr/share/nginx/html/admin
 # This MUST match the name 'build' from line 2 
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html/admin
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
