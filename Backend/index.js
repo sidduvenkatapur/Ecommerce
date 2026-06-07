@@ -68,7 +68,7 @@ const upload = multer({storage:storage});
 
 //upload endpoint
 
-app.post('upload', upload.single('product'),(req, res)=>{
+app.post('/upload', upload.single('product'),(req, res)=>{
     res.json({
         success: 1,
         //req.file.location automatically provides the full absolute https s3 URL link
