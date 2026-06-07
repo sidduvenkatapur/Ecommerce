@@ -38,7 +38,7 @@ on:
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: ecommerce-backend
-  ECS_SERVICE: ecommerce-backend-service
+  ECS_SERVICE: ecommerce-backend-task-service-v1
   ECS_CLUSTER: tough-horse-kwfv18
   ECS_TASK_DEFINITION: Backend/task-definition-backend.json
   CONTAINER_NAME: backend-container
