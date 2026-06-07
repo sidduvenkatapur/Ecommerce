@@ -22,10 +22,10 @@ const ProductDetails = () => {
     <div className='p-32 flex gap-10'>
     <div className='flex gap-4'>
     <div className='flex flex-col w-32 gap-3'>
-        {<img src={data[0]?.image} />}
-        {<img src={data[0]?.image} />}
-        {<img src={data[0]?.image} />}
-        {<img src={data[0]?.image} />}
+        {<img src={data[0].image.startsWith('http') ? data.image : `${process.env.REACT_APP_API_URL}/${data[0].image}`} />} 
+        {<img src={data[0].image.startsWith('http') ? data.image : `${process.env.REACT_APP_API_URL}/${data[0].image}`} />}
+        {<img src={data[0].image.startsWith('http') ? data.image : `${process.env.REACT_APP_API_URL}/${data[0].image}`} />}
+        {<img src={data[0].image.startsWith('http') ? data.image : `${process.env.REACT_APP_API_URL}/${data[0].image}`} />}
     </div>
     <img  className="w-[30rem]" alt='img' src={data[0]?.image} />
     </div>
