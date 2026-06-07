@@ -16,8 +16,11 @@ const Item = ({data}) => {
     const baseUrl = 'http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080';
 
     // 3. Extract just the raw filename out of the string (e.g., 'undefined_1707129465518.png')
-    const fileName = data.image.split('/').pop();
+    let fileName = data.image.split('/').pop();
 
+     if(fileName.startsWith('undefined_')){
+      fileName = fileName.replace('undefined_','product_')
+     }
     // 4. Combine them cleanly with exactly one '/images/' folder block
     return `${baseUrl}/images/${fileName}`;
 };
