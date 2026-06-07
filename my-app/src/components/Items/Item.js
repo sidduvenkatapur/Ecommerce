@@ -7,23 +7,13 @@ const Item = ({data}) => {
   const getImageSrc = () => {
     if (!data || !data.image) return "";
 
-    // 1. If it's a new S3 upload, it will start with http/https - use it straight away
-    if (data.image.startsWith('http')) {
+    if (/^https?:\/\//i.test(data.image)) {
         return data.image;
     }
 
-    // 2. Your live backend static asset container base URL
-    const baseUrl = process.env.REACT_APP_API_URL || 'http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080';
-
-    // 3. Extract just the raw filename out of the string (e.g., 'undefined_1707129465518.png')
-    let fileName = data.image.split('/').pop();
-
-    //  if(fileName.startsWith('undefined_')){
-    //   fileName = fileName.replace('undefined_','product_')
-    //  }
-    // 4. Combine them cleanly with exactly one '/images/' folder block
-    const relativePath = fileName.startsWith('images/') ? fileName : `images/${fileName}`;
-    return `${baseUrl.replace(/\/$/, '')}/${relativePath}`;
+    const baseUrl = (process.env.REACT_APP_API_URL || 'http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080').replace(/\/$/, '');
+    const relativePath = data.image.replace(/^\/+/, '');
+    return `${baseUrl}/${relativePath}`;
 };
 
   return (
