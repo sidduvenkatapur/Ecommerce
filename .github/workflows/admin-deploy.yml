@@ -73,7 +73,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
           # ⚠️ REPLACE THE URL BELOW WITH YOUR NEW ALB DNS NAME FROM THE CLOUDFORMATION OUTPUTS
-          VITE_API_URL: http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:80
+          VITE_API_URL: http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080
           
         run: |
           docker build --no-cache \
