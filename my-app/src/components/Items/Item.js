@@ -6,7 +6,7 @@ const Item = ({data}) => {
   return (
     <Link to={`/product/${data.id}`}>
     <div className='flex flex-col'>
-    <img alt="item" src={`${process.env.REACT_APP_API_URL}/${data.image}`} />
+    <img alt="item" src={data.image.startsWith('http') ? data.image : `${process.env.REACT_APP_API_URL}/${data.image}`} />
     <p className='py-4 text-lg'>{data.name}</p>
     <p className=''><span className='pr-4'>${data.new_price}</span> <span className='text text-neutral-400 line-through'>${data.old_price}</span></p>
     </div>
