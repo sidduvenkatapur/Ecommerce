@@ -18,9 +18,9 @@ const Item = ({data}) => {
     // 3. Extract just the raw filename out of the string (e.g., 'undefined_1707129465518.png')
     let fileName = data.image.split('/').pop();
 
-     if(fileName.startsWith('undefined_')){
-      fileName = fileName.replace('undefined_','product_')
-     }
+    //  if(fileName.startsWith('undefined_')){
+    //   fileName = fileName.replace('undefined_','product_')
+    //  }
     // 4. Combine them cleanly with exactly one '/images/' folder block
     const relativePath = fileName.startsWith('images/') ? fileName : `images/${fileName}`;
     return `${baseUrl.replace(/\/$/, '')}/${relativePath}`;
