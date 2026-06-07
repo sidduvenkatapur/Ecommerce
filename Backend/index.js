@@ -60,7 +60,7 @@ app.use('/images',express.static('upload/images'))
 app.post('/upload',upload.single('product'),(req,res)=>{
  res.json({
     success:1,
-    image_url:`http://app-load-balancer-259321352.us-east-1.elb.amazonaws.com:8080/images/${req.file.filename}`
+    image_url:`http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080/images/${req.file.filename}`
  })
 })
 
