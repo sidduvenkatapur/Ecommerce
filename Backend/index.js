@@ -3,7 +3,9 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const { S3Client } = require('@aws-sdk/client-s3');
 const multer = require("multer");
+const multerS3 = require('multer-s3')
 const path = require("path");
 const cors = require("cors");
 const { log, Console } = require("console");
@@ -45,24 +47,53 @@ app.listen(port,(error)=>{
 })
 
 //Image storage Engine
+// Initialize AWS S3 Client
+const s3 = new S3Client({
+    region:'us-east-1'
+});
 
-const storage = multer.diskStorage({
-    destination:'./upload/images',
-    filename:(req,file,cb)=>{
-        return cb(null,`${file.originalname}_${Date.now()}${path.extname(file.originalname)}`)
+//New Images storage Engine using s3
+
+const storage  = multerS3({
+    s3:s3,
+    bucket: 'ecommerce-product-images-s3-865230234414-us-east-1-an',
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    key: function (req, file, cb){
+        const uniqueName = `${path.parse(file.originalname).name}_${Date.now()}${path.extname(file.originalname)}`;
+        cb(null,uniqueName)
     }
+});
+
+const upload = multer({storage:storage});
+
+//upload endpoint
+
+app.post('upload', upload.single('product'),(req, res)=>{
+    res.json({
+        success: 1,
+        //req.file.location automatically provides the full absolute https s3 URL link
+        image_url: req.file.location
+    })
 })
 
-const upload = multer({storage:storage})
 
-//Upload end point 
-app.use('/images',express.static('upload/images'))
-app.post('/upload',upload.single('product'),(req,res)=>{
- res.json({
-    success:1,
-    image_url:`http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080/images/${req.file.filename}`
- })
-})
+// const storage = multer.diskStorage({
+//     destination:'./upload/images',
+//     filename:(req,file,cb)=>{
+//         return cb(null,`${file.originalname}_${Date.now()}${path.extname(file.originalname)}`)
+//     }
+// })
+
+// const upload = multer({storage:storage})
+
+// //Upload end point 
+// // app.use('/images',express.static('upload/images'))
+// app.post('/upload',upload.single('product'),(req,res)=>{
+//  res.json({
+//     success:1,
+//     image_url:`http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080/images/${req.file.filename}`
+//  })
+// })
 
 //Schema for product
 
