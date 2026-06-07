@@ -13,7 +13,7 @@ const Item = ({data}) => {
     }
 
     // 2. Your live backend static asset container base URL
-    const baseUrl = 'http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080';
+    const baseUrl = process.env.REACT_APP_API_URL || 'http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080';
 
     // 3. Extract just the raw filename out of the string (e.g., 'undefined_1707129465518.png')
     let fileName = data.image.split('/').pop();
@@ -22,7 +22,8 @@ const Item = ({data}) => {
       fileName = fileName.replace('undefined_','product_')
      }
     // 4. Combine them cleanly with exactly one '/images/' folder block
-    return `${baseUrl}/images/${fileName}`;
+    const relativePath = fileName.startsWith('images/') ? fileName : `images/${fileName}`;
+    return `${baseUrl.replace(/\/$/, '')}/${relativePath}`;
 };
 
   return (

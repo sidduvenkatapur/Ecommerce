@@ -1,3 +1,4 @@
+require('dotenv').config();
 const port = 8080;
 const express = require("express");
 const app = express();
@@ -9,6 +10,14 @@ const multerS3 = require('multer-s3')
 const path = require("path");
 const cors = require("cors");
 const { log, Console } = require("console");
+
+const awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+const awsRegion = process.env.AWS_REGION || 'us-east-1';
+
+if (!awsAccessKeyId || !awsSecretAccessKey) {
+  console.warn('AWS credentials are not set in environment variables. S3 uploads will fail.');
+}
 
 app.use(express.json());
 app.use(cors());
@@ -49,22 +58,23 @@ app.listen(port,(error)=>{
 //Image storage Engine
 // Initialize AWS S3 Client
 const s3 = new S3Client({
-    region:'us-east-1',
-    credentials:{
-        accessKeyId:secrets.AWS_ACCESS_KEY_ID,
-        secretAccessKey:secrets.AWS_SECRET_ACCESS_KEY,
+    region: awsRegion,
+    credentials: {
+        accessKeyId: awsAccessKeyId,
+        secretAccessKey: awsSecretAccessKey,
     }
 });
 
 //New Images storage Engine using s3
 
 const storage  = multerS3({
-    s3:s3,
+    s3: s3,
     bucket: 'ecommerce-product-images-s3-865230234414-us-east-1-an',
+    acl: 'public-read',
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function (req, file, cb){
         const uniqueName = `${path.parse(file.originalname).name}_${Date.now()}${path.extname(file.originalname)}`;
-        cb(null,uniqueName)
+        cb(null, uniqueName)
     }
 });
 
@@ -72,12 +82,22 @@ const upload = multer({storage:storage});
 
 //upload endpoint
 
-app.post('/upload', upload.single('product'),(req, res)=>{
-    res.json({
-        success: 1,
-        //req.file.location automatically provides the full absolute https s3 URL link
-        image_url: req.file.location
-    })
+app.post('/upload', (req, res) => {
+    upload.single('product')(req, res, function(err) {
+        if (err) {
+            console.error('S3 upload error:', err);
+            return res.status(500).json({ success: 0, error: err.message || 'File upload failed' });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ success: 0, error: 'No file uploaded.' });
+        }
+
+        res.json({
+            success: 1,
+            image_url: req.file.location
+        });
+    });
 })
 
 

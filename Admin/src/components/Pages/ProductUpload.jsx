@@ -21,7 +21,7 @@ const Changehandler =(e)=>{
 const uploadProduct = async()=>{
     console.log(Product);
     let responsedata;
-    let product = Product;
+    let product = {...Product};
     let formdata = new FormData();
     formdata.append('product',image);
     await fetch(`${import.meta.env.VITE_API_URL}/upload`,{
@@ -150,7 +150,7 @@ const uploadProduct = async()=>{
                     >
                       <span>Upload a file</span>
                          {/* <img src={URL.createObjectURL(image)}/>  */}
-                      <input id="image" name="image" type="file" className="sr-only"  onChange={imagehandler}  value={Product.image}/>
+                      <input id="image" name="image" type="file" className="sr-only" onChange={imagehandler} />
                     </label>
                     <p className="pl-1">or drag and drop</p>
                   </div>
