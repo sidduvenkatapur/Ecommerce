@@ -11,7 +11,8 @@ const Item = ({data}) => {
         return data.image;
     }
 
-    const baseUrl = (process.env.REACT_APP_API_URL || 'http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080').replace(/\/$/, '');
+    // const baseUrl = (process.env.REACT_APP_API_URL || 'http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080').replace(/\/$/, '');
+    const baseUrl = "https://ecommerce-product-images-s3-865230234414-us-east-1-an.s3.us-east-1.amazonaws.com"
     const relativePath = data.image.replace(/^\/+/, '');
     return `${baseUrl}/${relativePath}`;
 };
