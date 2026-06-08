@@ -59,10 +59,10 @@ app.listen(port,(error)=>{
 // Initialize AWS S3 Client
 const s3 = new S3Client({
     region: awsRegion,
-    credentials: {
-        accessKeyId: awsAccessKeyId,
-        secretAccessKey: awsSecretAccessKey,
-    }
+    // credentials: {
+    //     accessKeyId: awsAccessKeyId,
+    //     secretAccessKey: awsSecretAccessKey,
+    // }
 });
 
 //New Images storage Engine using s3
