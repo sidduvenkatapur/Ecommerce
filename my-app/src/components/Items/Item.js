@@ -13,12 +13,12 @@ const getImageSrc = () => {
     }
 
     // 2. Your live AWS backend container URL where your old images live on disk
-    const backendUrl = process.env.REACT_APP_API_URL
+    const s3BucketUrl ='https://ecommerce-product-images-s3-865230234414-us-east-1-an.s3.us-east-1.amazonaws.com'
     // 3. Extract just the raw filename to strip out any duplicate folder prefixes
     const fileName = data.image.split('/').pop();
 
     // 4. Combine them cleanly to point directly to your backend's static file folder
-    return `${backendUrl}/images/${fileName}`;
+    return `${s3BucketUrl}/${fileName}`;
 };
 
   return (
