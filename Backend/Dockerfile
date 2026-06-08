@@ -2,7 +2,7 @@
 FROM node:18-slim
 
 # 2. Create an app directory inside the container
-WORKDIR /urs/src/app
+WORKDIR /usr/src/app
 
 # 3. Copy package files and install dependencies
 COPY package*.json ./
