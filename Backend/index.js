@@ -70,7 +70,7 @@ const s3 = new S3Client({
 const storage  = multerS3({
     s3: s3,
     bucket: 'ecommerce-product-images-s3-865230234414-us-east-1-an',
-    acl: 'public-read',
+    // acl: 'public-read',
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function (req, file, cb){
         const uniqueName = `${path.parse(file.originalname).name}_${Date.now()}${path.extname(file.originalname)}`;
