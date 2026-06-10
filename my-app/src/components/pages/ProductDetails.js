@@ -10,12 +10,29 @@ const ProductDetails = () => {
 
     const product = products.find((p) => p.id == params.id);
 
-    const getImageSrc = (image) => {
-        if (!image) return "";
-        if (/^https?:\/\//i.test(image)) return image;
-        const baseUrl = (process.env.REACT_APP_API_URL || 'http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080').replace(/\/$/, '');
-        return `${baseUrl}/${image.replace(/^\/+/, '')}`;
-    };
+    // const getImageSrc = (image) => {
+        // if (!image) return "";
+        // if (/^https?:\/\//i.test(image)) return image;
+        // const baseUrl = (process.env.REACT_APP_API_URL || 'http://app-load-balancer-2109406327.us-east-1.elb.amazonaws.com:8080').replace(/\/$/, '');
+        // return `${baseUrl}/${image.replace(/^\/+/, '')}`;
+    // };
+
+const getImageSrc = (image) => {
+    if (!image) return "";
+
+    // 1. If it's a new upload (already contains http:// or https://), use it natively
+    if (image.startsWith('http')) {
+        return image;
+    }
+
+    // 2. Your live AWS backend container URL where your old images live on disk
+    const s3BucketUrl ='https://ecommerce-product-images-s3-865230234414-us-east-1-an.s3.us-east-1.amazonaws.com'
+    // 3. Extract just the raw filename to strip out any duplicate folder prefixes
+    const fileName = image.split('/').pop();
+
+    // 4. Combine them cleanly to point directly to your backend's static file folder
+    return `${s3BucketUrl}/${fileName}`;
+};
 
     if (!product) {
         return <div className='p-32'>Product not found.</div>;
