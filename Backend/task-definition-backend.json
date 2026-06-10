@@ -1,6 +1,7 @@
 {
   "family": "ecommerce-backend-task",
   "executionRoleArn":"arn:aws:iam::865230234414:role/ecsTaskExecutionRole",
+  "taskRoleArn":"arn:aws:iam::865230234414:role/ecommerce-backend-s3-role",
   "networkMode": "awsvpc",
   "requiresCompatibilities": [
     "FARGATE"
